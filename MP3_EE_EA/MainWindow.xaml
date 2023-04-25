@@ -1,0 +1,225 @@
+﻿<Window x:Class="MP3_EE_EA.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MP3_EE_EA"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="450">
+    <!--ItemsSource="{Binding song_Models}"-->
+
+
+    <Window.Resources>
+
+        <BitmapImage UriSource="pack://application:,,,/Images/Fast_Foward.png" x:Key="Double_Arrow_Image"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Pause_Button.png" x:Key="Pause_Button_Image"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Play_Button.png" x:Key="Play_Button_Image"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Backword.png" x:Key="Backword_Image"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Volume_75.png" x:Key="Volume_75"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Volume_50.png" x:Key="Volume_50"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Volume_25.png" x:Key="Volume_25"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Volume_0.png" x:Key="Volume_0"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Volume_mute.png" x:Key="Volume_mute"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/trash_can.png" x:Key="trash_can"/>
+
+
+        <DataTemplate x:Key="Song_Name">
+            <TextBlock HorizontalAlignment="Left" Margin="0" Width="150" Padding="0" Text="{Binding Path=Name}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="Song_Artist">
+            <TextBlock TextAlignment="Right" Margin="0" Width="150" Padding="0" Text="{Binding Path=Artist}" />
+        </DataTemplate>
+
+        <Style x:Key="MyDataGridCell" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+            <Setter Property="TextBlock.TextAlignment" Value="Right"/>
+            <Setter Property="TextBlock.Width" Value="{Binding ActualWidth, ElementName=DataGrid_Artist}"/>
+
+
+        </Style>
+
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border  BorderThickness="1" BorderBrush="Black" Background="Black" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="Blue"  BorderThickness="1" BorderBrush="LightBlue" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Height="10" Width="10" Fill="Blue"></Ellipse>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Track VerticalAlignment="Center" Grid.Row="1" x:Name="PART_Track"   >
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="Horizontal_Slider" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21" />
+                    <Setter Property="MinWidth" Value="104" />
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+    </Window.Resources>
+
+
+    <Grid Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Name="stackPanel1" Width="Auto" LastChildFill="False">
+            <Grid DockPanel.Dock="Top">
+                <DataGrid
+                x:Name="datagrid_Songs"
+          ItemsSource="{Binding Path=song_Models}" 
+          IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged" AutoGenerateColumns="False" GridLinesVisibility="Vertical" UseLayoutRounding="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Name}" Width="4*">
+                            <DataGridTextColumn.Header>
+                                Song
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn x:Name="DataGrid_Artist" Binding="{Binding Artist}" CellStyle="{StaticResource MyDataGridCell}"  Width="4*">
+                            <DataGridTextColumn.Header >
+                                <TextBlock Text="Artist" TextAlignment="Right" Padding="0,0,5,0" Margin="0" Width="{Binding ActualWidth, ElementName=DataGrid_Artist}" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn x:Name="DataGrid_Trash" Header="Length" Binding="{Binding Length}" Width="1*"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <TextBlock Text="X" TextAlignment="Right" Margin="0" Width="{Binding ActualWidth, ElementName=DataGrid_Trash}"  />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{StaticResource trash_can}" Width="15" Height="15" MouseLeftButtonUp="Trash_Can_MouseLeftButtonUp"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+            <Button DockPanel.Dock="Bottom" Click="Add_New_File_MouseLeftButtonUp">
+                Open MP3 Folder
+            </Button>
+        </DockPanel>
+        
+        <Grid Grid.Row="1">
+            <Grid Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="8*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" VerticalContentAlignment="Center" x:Name="current_Amount_Of_Song" HorizontalContentAlignment="Right" Grid.Column="0">00:00</Label>
+                <Slider
+                        Thumb.DragStarted="Progress_Slider_DragStarted"
+                        Thumb.DragCompleted="Progress_Slider_DragCompleted"
+                    VerticalContentAlignment="Center"
+                    Grid.Row="0" x:Name="Progress_Slider"  Grid.Column="1" Style="{StaticResource Horizontal_Slider}"  Value="0" Maximum="1000" Minimum="0" Margin="10,0,10,0"/>
+                <Label VerticalContentAlignment="Center" Grid.Row="0" x:Name="End_Time_For_Song" Grid.Column="2">00:00</Label>
+                <Image x:Name="Volume_Image_Name"
+                       Source="{StaticResource Volume_75}" Tag="Not_Mute"  Margin="0,38,0,3" Grid.RowSpan="2"
+                    HorizontalAlignment="Right"
+                    MouseLeftButtonUp="Volume_Image_MouseLeftButtonUp"
+                       />
+
+                <Slider
+                    ValueChanged="volume_Slider_ValueChanged"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                     x:Name="volume_Slider"  Grid.Column="1" Width="50" Style="{StaticResource Horizontal_Slider}"  Value="100" Maximum="100" Minimum="0" Margin="10,0,0,0" Grid.Row="1"/>
+
+            </Grid>
+
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" MouseLeftButtonUp="Backward_MouseLeftButtonUp" Source="{StaticResource Backword_Image}">
+
+                </Image>
+                <Image Grid.Column="1" x:Name="PP_Image_Name" MouseLeftButtonDown="Pause_MouseLeftButtonDown" Source="{StaticResource Play_Button_Image}">
+
+                </Image>
+                <Image Grid.Column="2" MouseLeftButtonUp="Foward_MouseLeftButtonUp" Source="{StaticResource Double_Arrow_Image}">
+
+                </Image>
+
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

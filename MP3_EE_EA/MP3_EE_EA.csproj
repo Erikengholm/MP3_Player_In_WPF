@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\Backword.png" />
+    <None Remove="Images\Fast_Foward.png" />
+    <None Remove="Images\Pause_Button.png" />
+    <None Remove="Images\Play_Button.png" />
+    <None Remove="Images\trash_can.png" />
+    <None Remove="Images\Volume_0.png" />
+    <None Remove="Images\Volume_25.png" />
+    <None Remove="Images\Volume_50.png" />
+    <None Remove="Images\Volume_75.png" />
+    <None Remove="Images\Volume_mute.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Backword.png" />
+    <Resource Include="Images\Fast_Foward.png" />
+    <Resource Include="Images\Play_Button.png" />
+    <Resource Include="Images\Pause_Button.png" />
+    <Resource Include="Images\trash_can.png" />
+    <Resource Include="Images\Volume_0.png" />
+    <Resource Include="Images\Volume_25.png" />
+    <Resource Include="Images\Volume_50.png" />
+    <Resource Include="Images\Volume_75.png" />
+    <Resource Include="Images\Volume_mute.png" />
+  </ItemGroup>
+
+</Project>
