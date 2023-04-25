@@ -32,10 +32,10 @@ namespace MP3_EE_EA
 
         private bool Paused = true;
 
-        private MediaPlayer mediaPlayer = new MediaPlayer();
+        private MediaPlayer mediaPlayer = new();
 
 
-        public List<Song_Model> song_Models { get; set; } = List_Helper.Fill_List_From_Folder();
+        public List<Song_Model> SongModels { get; set; } = List_Helper.Fill_List_From_Folder();
 
         public MainWindow()
         {
@@ -61,14 +61,14 @@ namespace MP3_EE_EA
             }
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            song_Models.Select(c => { c.Song_Is_Playing = false; return c; }).ToList();
+            SongModels.Select(c => { c.Song_Is_Playing = false; return c; }).ToList();
 
             Song_Model song_item = (Song_Model)datagrid_Songs.SelectedItem;
 
@@ -84,7 +84,7 @@ namespace MP3_EE_EA
 
         }
 
-        private void Pause_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Pause_MouseLeftButtonDown(object sender, MouseButtonEventArgs? e)
         {
             if (sender is Image img && datagrid_Songs.SelectedItem is Song_Model song)
             {
@@ -97,7 +97,7 @@ namespace MP3_EE_EA
                     if (!song.Song_Is_Playing)
                     {
 
-                        song_Models.Select(songSelector => songSelector.Song_Is_Playing = false);
+                        SongModels.Select(songSelector => songSelector.Song_Is_Playing = false);
 
                         song.Song_Is_Playing = true;
 
@@ -139,7 +139,7 @@ namespace MP3_EE_EA
 
                 }
 
-                select_Next_Song();
+                Select_Next_Song();
             }
             else
             {
@@ -150,7 +150,7 @@ namespace MP3_EE_EA
 
         }
 
-        public void select_Next_Song()
+        public void Select_Next_Song()
         {
 
             var The_Selected_Song = datagrid_Songs.SelectedItem;
@@ -193,7 +193,7 @@ namespace MP3_EE_EA
 
         private void Foward_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            select_Next_Song();
+            Select_Next_Song();
         }
         private void Backward_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -227,7 +227,7 @@ namespace MP3_EE_EA
                 {
                    var stringArray = tags.Split(";");
 
-                    double.TryParse(stringArray.Last(), out Old_Volume);
+                    _ = double.TryParse(stringArray.Last(), out Old_Volume);
                 }
 
                 if (tags is string tagString && tagString.Contains("Muted"))
@@ -235,18 +235,18 @@ namespace MP3_EE_EA
                     Volume_Image.Tag = "Not_Mute";
                     volume_Slider.Value = Old_Volume;
 
-                    volume_Slider_ValueChanged(volume_Slider,null);
+                    Volume_Slider_ValueChanged(volume_Slider,null);
                 }
                 else
                 {
                     Volume_Image.Tag = "Muted;"+ volume_Slider.Value;
                     volume_Slider.Value = 0;
-                    volume_Slider_ValueChanged(volume_Slider, null);
+                    Volume_Slider_ValueChanged(volume_Slider, null);
                 }
             }
         }
 
-        private void volume_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double>? e)
+        private void Volume_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double>? e)
         {
             if (sender is Slider volume_Slider)
             {
@@ -286,18 +286,25 @@ namespace MP3_EE_EA
 
         private void Add_New_File_MouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
-            var fileContent = string.Empty;
-            var filePath = string.Empty;
-
             var folder = List_Helper.TryGetMp3Folder();
+
+
 
             OpenFileDialog openFileDialog = new()
             {
-                InitialDirectory = folder.FullName,
                 Filter = "mp3 files (*.mp3)|*.mp3",
                 FilterIndex = 2,
                 RestoreDirectory = true
             };
+
+            if (folder != null)
+            {
+                openFileDialog.InitialDirectory = folder.FullName;
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = "C:\\";
+            }
 
             if (openFileDialog.ShowDialog() == true)
             {

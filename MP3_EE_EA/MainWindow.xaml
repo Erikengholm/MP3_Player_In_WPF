@@ -188,7 +188,7 @@
                        />
 
                 <Slider
-                    ValueChanged="volume_Slider_ValueChanged"
+                    ValueChanged="Volume_Slider_ValueChanged"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
                      x:Name="volume_Slider"  Grid.Column="1" Width="50" Style="{StaticResource Horizontal_Slider}"  Value="100" Maximum="100" Minimum="0" Margin="10,0,0,0" Grid.Row="1"/>
