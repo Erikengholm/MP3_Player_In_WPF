@@ -38,6 +38,7 @@
 
         </Style>
 
+
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -120,6 +121,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="4*"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="4*"/>
 
@@ -128,8 +130,8 @@
             <Grid DockPanel.Dock="Top">
                 <DataGrid
                 x:Name="datagrid_Songs"
-          ItemsSource="{Binding Path=song_Models}" 
-          IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged" AutoGenerateColumns="False" GridLinesVisibility="Vertical" UseLayoutRounding="True">
+          ItemsSource="{Binding Path=SongModels}" 
+          IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged" VerticalScrollBarVisibility="Visible" AutoGenerateColumns="False" GridLinesVisibility="Vertical" UseLayoutRounding="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}" Width="4*">
                             <DataGridTextColumn.Header>
@@ -142,10 +144,10 @@
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn x:Name="DataGrid_Trash" Header="Length" Binding="{Binding Length}" Width="1*"/>
-                        <DataGridTemplateColumn>
+                        <DataGridTextColumn x:Name="DataGrid_Trash" Header="Length" Binding="{Binding Length}" Width="2*"/>
+                        <DataGridTemplateColumn >
                             <DataGridTemplateColumn.Header>
-                                <TextBlock Text="X" TextAlignment="Right" Margin="0" Width="{Binding ActualWidth, ElementName=DataGrid_Trash}"  />
+                                <TextBlock Text="" TextAlignment="Right" Margin="0" Width="{Binding ActualWidth, ElementName=DataGrid_Trash}"  />
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -157,46 +159,55 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-            <Button DockPanel.Dock="Bottom" Click="Add_New_File_MouseLeftButtonUp">
-                Open MP3 Folder
-            </Button>
         </DockPanel>
-        
-        <Grid Grid.Row="1">
-            <Grid Background="White">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+        <Button Grid.Row="1" Click="Add_New_File_MouseLeftButtonUp">
+            Open MP3 Folder
+        </Button>
 
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="8*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Row="0" VerticalContentAlignment="Center" x:Name="current_Amount_Of_Song" HorizontalContentAlignment="Right" Grid.Column="0">00:00</Label>
-                <Slider
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="0.5*"/>
+
+            </Grid.ColumnDefinitions>
+            <Grid/>
+            <Border Background="White" BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8" Grid.Column="1">
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="8*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" VerticalContentAlignment="Center" x:Name="current_Amount_Of_Song" HorizontalContentAlignment="Right" Grid.Column="0" Content="00:00"/>
+                    <Slider
                         Thumb.DragStarted="Progress_Slider_DragStarted"
                         Thumb.DragCompleted="Progress_Slider_DragCompleted"
-                    VerticalContentAlignment="Center"
-                    Grid.Row="0" x:Name="Progress_Slider"  Grid.Column="1" Style="{StaticResource Horizontal_Slider}"  Value="0" Maximum="1000" Minimum="0" Margin="10,0,10,0"/>
-                <Label VerticalContentAlignment="Center" Grid.Row="0" x:Name="End_Time_For_Song" Grid.Column="2">00:00</Label>
-                <Image x:Name="Volume_Image_Name"
-                       Source="{StaticResource Volume_75}" Tag="Not_Mute"  Margin="0,38,0,3" Grid.RowSpan="2"
-                    HorizontalAlignment="Right"
-                    MouseLeftButtonUp="Volume_Image_MouseLeftButtonUp"
+                        VerticalContentAlignment="Center"
+                        Grid.Row="0" x:Name="Progress_Slider"  Grid.Column="1" Style="{StaticResource Horizontal_Slider}"  Value="0" Maximum="1000" Minimum="0" Margin="10,0,10,0"/>
+                    <Label VerticalContentAlignment="Center" Grid.Row="0" x:Name="End_Time_For_Song" Grid.Column="2" Content="00:00"/>
+                    <Image x:Name="Volume_Image_Name"
+                        Source="{StaticResource Volume_75}" Tag="Not_Mute"  Margin="0,38,0,3" Grid.RowSpan="2"
+                        HorizontalAlignment="Right"
+                        MouseLeftButtonUp="Volume_Image_MouseLeftButtonUp"
                        />
 
-                <Slider
-                    ValueChanged="Volume_Slider_ValueChanged"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Left"
-                     x:Name="volume_Slider"  Grid.Column="1" Width="50" Style="{StaticResource Horizontal_Slider}"  Value="100" Maximum="100" Minimum="0" Margin="10,0,0,0" Grid.Row="1"/>
+                    <Slider
+                        ValueChanged="Volume_Slider_ValueChanged"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        x:Name="volume_Slider"  Grid.Column="1" Width="50" Style="{StaticResource Horizontal_Slider}"  Value="100" Maximum="100" Minimum="0" Margin="10,0,0,0" Grid.Row="1"/>
 
-            </Grid>
-
+                </Grid>
+            </Border>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>

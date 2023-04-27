@@ -17,15 +17,24 @@ namespace MP3_EE_EA.Static_Classes
         {
             var temp = new List<Song_Model>();
 
-            var Test_Song = new Song_Model()
-            {
-                URL = "Test",
-                Name = "Honey and Honey",
-                Artist = " Pooh",
-                Length = "2:32"
-            };
+            int counter = 0;
 
-            temp.Add(Test_Song);
+            while (counter < 100)
+            {
+                var Test_Song = new Song_Model()
+                {
+                    URL = "Test",
+                    Name = "Honey and Honey",
+                    Artist = " Pooh",
+                    Length = "2:32"
+                };
+
+                counter++;
+
+                temp.Add(Test_Song);
+            }
+
+
 
             return temp;
         }

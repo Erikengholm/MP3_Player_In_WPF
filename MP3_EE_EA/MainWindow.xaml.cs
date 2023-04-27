@@ -18,7 +18,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TagLib;
 using TagLib.Ape;
 
@@ -32,10 +31,11 @@ namespace MP3_EE_EA
 
         private bool Paused = true;
 
-        private MediaPlayer mediaPlayer = new();
+        private readonly MediaPlayer mediaPlayer = new();
 
 
-        public List<Song_Model> SongModels { get; set; } = List_Helper.Fill_List_From_Folder();
+        public List<Song_Model> SongModels { get; set; } = List_Helper.Fill_List();
+
 
         public MainWindow()
         {
@@ -61,6 +61,9 @@ namespace MP3_EE_EA
             }
         }
 
+
+
+
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -72,16 +75,18 @@ namespace MP3_EE_EA
 
             Song_Model song_item = (Song_Model)datagrid_Songs.SelectedItem;
 
-            End_Time_For_Song.Content = song_item.Length;
-            current_Amount_Of_Song.Content = MP3_functions.TimeToString(0);
+            if (song_item != null)
+            {
+                End_Time_For_Song.Content = song_item.Length;
+                current_Amount_Of_Song.Content = MP3_functions.TimeToString(0);
 
 
-            Progress_Slider.Value = 0;
+                Progress_Slider.Value = 0;
 
-            mediaPlayer.Stop();
-            Paused = true;
-            Pause_MouseLeftButtonDown(PP_Image_Name, null);
-
+                mediaPlayer.Stop();
+                Paused = true;
+                Pause_MouseLeftButtonDown(PP_Image_Name, null);
+            }
         }
 
         private void Pause_MouseLeftButtonDown(object sender, MouseButtonEventArgs? e)
@@ -279,7 +284,20 @@ namespace MP3_EE_EA
         {
             if (MessageBox.Show("Are you sure you want to Delete the MP3 file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                //do no stuff
+                if (sender is Image image && image.DataContext is Song_Model song && System.IO.File.Exists(song.URL))
+                {
+                    System.IO.File.Delete(song.URL);
+                    SongModels = List_Helper.Fill_List_From_Folder();
+                    datagrid_Songs.ItemsSource = null;
+                    datagrid_Songs.ItemsSource = SongModels;
+                    datagrid_Songs.Items.Refresh();
+
+                    if (mediaPlayer.Source == new Uri(song.URL))
+                    {
+                        Select_Next_Song();
+                    }
+
+                }
             }
             
         }
@@ -300,6 +318,7 @@ namespace MP3_EE_EA
             if (folder != null)
             {
                 openFileDialog.InitialDirectory = folder.FullName;
+
             }
             else
             {
@@ -309,7 +328,12 @@ namespace MP3_EE_EA
             if (openFileDialog.ShowDialog() == true)
             {
 
+
             }
+            SongModels = List_Helper.Fill_List_From_Folder();
+            datagrid_Songs.ItemsSource = null;
+            datagrid_Songs.ItemsSource = SongModels;
+            datagrid_Songs.Items.Refresh();
         }
     }
 }
