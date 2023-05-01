@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:MP3_EE_EA"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="450">
-    <!--ItemsSource="{Binding song_Models}"-->
 
 
     <Window.Resources>
@@ -21,6 +20,8 @@
         <BitmapImage UriSource="pack://application:,,,/Images/Volume_0.png" x:Key="Volume_0"/>
         <BitmapImage UriSource="pack://application:,,,/Images/Volume_mute.png" x:Key="Volume_mute"/>
         <BitmapImage UriSource="pack://application:,,,/Images/trash_can.png" x:Key="trash_can"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Shuffle_Off.png" x:Key="Shuffle_Off"/>
+        <BitmapImage UriSource="pack://application:,,,/Images/Shuffle_On.png" x:Key="Shuffle_On"/>
 
 
         <DataTemplate x:Key="Song_Name">
@@ -203,6 +204,13 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Left"
                         x:Name="volume_Slider"  Grid.Column="1" Width="50" Style="{StaticResource Horizontal_Slider}"  Value="100" Maximum="100" Minimum="0" Margin="10,0,0,0" Grid.Row="1"/>
+                    <Image
+                        Grid.Column="2"
+                        Source="{StaticResource Shuffle_Off}" Tag="Not_Mute"  Margin="0,38,0,3" Grid.RowSpan="2"
+                        HorizontalAlignment="Left"
+                        MouseLeftButtonUp="Shuffle_MouseLeftButtonUp"
+                       />
+
 
                 </Grid>
             </Border>

@@ -10,7 +10,7 @@ using TagLib;
 
 namespace MP3_EE_EA.Static_Classes
 {
-    class List_Helper
+    public class List_Helper
     {
 
         public static List<Song_Model> Fill_List()
@@ -131,6 +131,14 @@ namespace MP3_EE_EA.Static_Classes
                 if (directory.GetDirectories().FirstOrDefault(d => d.Name == "Mp3_Files") is DirectoryInfo di)
                 {
                     return di;
+                }
+                else if(directory.Name == "MP3_EE_EA")
+                {
+
+                    directory = directory.GetDirectories().First(d => d.Name == "MP3_EE_EA");
+
+                    return directory.GetDirectories().FirstOrDefault(d => d.Name == "Mp3_Files");
+
                 }
                 else
                 {

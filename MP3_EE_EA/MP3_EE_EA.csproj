@@ -12,6 +12,8 @@
     <None Remove="Images\Fast_Foward.png" />
     <None Remove="Images\Pause_Button.png" />
     <None Remove="Images\Play_Button.png" />
+    <None Remove="Images\Shuffle_Off.png" />
+    <None Remove="Images\Shuffle_On.png" />
     <None Remove="Images\trash_can.png" />
     <None Remove="Images\Volume_0.png" />
     <None Remove="Images\Volume_25.png" />
@@ -29,6 +31,8 @@
     <Resource Include="Images\Fast_Foward.png" />
     <Resource Include="Images\Play_Button.png" />
     <Resource Include="Images\Pause_Button.png" />
+    <Resource Include="Images\Shuffle_Off.png" />
+    <Resource Include="Images\Shuffle_On.png" />
     <Resource Include="Images\trash_can.png" />
     <Resource Include="Images\Volume_0.png" />
     <Resource Include="Images\Volume_25.png" />

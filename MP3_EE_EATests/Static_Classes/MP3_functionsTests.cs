@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MP3_EE_EA.Models;
 using MP3_EE_EA.Static_Classes;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace MP3_EE_EA.Static_Classes.Tests
     public class MP3_functionsTests
     {
         [TestMethod()]
-        public void TimeToStringTest()
+        public void TimeToString_Test()
         {
 
             var result = MP3_functions.TimeToString(-2000);
@@ -25,5 +26,24 @@ namespace MP3_EE_EA.Static_Classes.Tests
             Assert.AreEqual("01:06:40", result3);
 
         }
+
+        [TestMethod()]
+        public void Get_MP3_Folder_Test()
+        {
+            var folder = List_Helper.TryGetMp3Folder();
+
+            Assert.IsNotNull(folder);
+
+
+            string name = folder.Name;
+
+            Assert.AreEqual("Mp3_Files", name);
+
+        }
+
+
+
+
+
     }
 }

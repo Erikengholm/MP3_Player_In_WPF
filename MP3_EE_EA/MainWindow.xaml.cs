@@ -29,40 +29,18 @@ namespace MP3_EE_EA
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
-        private bool Paused = true;
-
-        private readonly MediaPlayer mediaPlayer = new();
-
-
-        public List<Song_Model> SongModels { get; set; } = List_Helper.Fill_List();
-
-
+        
         public MainWindow()
         {
             InitializeComponent();
 
             this.DataContext = this;
 
-            //song_Models.Add(new Song_Model() { Name = "Ryan", Artist = "George", Length = "4:11", URL = "j" });
-
+            datagrid_Songs.ItemsSource = Media_Player_Singleton.Instance.SongModels;
         }
 
-        private int viewType;
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        public int ViewType
-        {
-            get { return viewType; }
-            set
-            {
-                viewType = value;
-                OnPropertyChanged("ViewType");
-            }
-        }
-
-
-
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {
@@ -71,22 +49,14 @@ namespace MP3_EE_EA
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SongModels.Select(c => { c.Song_Is_Playing = false; return c; }).ToList();
+            Media_Player_Singleton.Instance.SongModels.Select(c => { c.Song_Is_Playing = false; return c; }).ToList();
 
             Song_Model song_item = (Song_Model)datagrid_Songs.SelectedItem;
 
-            if (song_item != null)
-            {
-                End_Time_For_Song.Content = song_item.Length;
-                current_Amount_Of_Song.Content = MP3_functions.TimeToString(0);
+            Media_Player_Singleton.Instance.Song_Selection_Is_Changed(song_item, End_Time_For_Song, current_Amount_Of_Song, Progress_Slider);
 
+            Pause_MouseLeftButtonDown(PP_Image_Name, null);
 
-                Progress_Slider.Value = 0;
-
-                mediaPlayer.Stop();
-                Paused = true;
-                Pause_MouseLeftButtonDown(PP_Image_Name, null);
-            }
         }
 
         private void Pause_MouseLeftButtonDown(object sender, MouseButtonEventArgs? e)
@@ -94,57 +64,38 @@ namespace MP3_EE_EA
             if (sender is Image img && datagrid_Songs.SelectedItem is Song_Model song)
             {
 
-                if (Paused)
+                Media_Player_Singleton.Instance.Pause_Or_Play(img,song);
+                
+                if (!Media_Player_Singleton.Instance.Paused)
                 {
-                    img.SetResourceReference(Image.SourceProperty, "Pause_Button_Image");
-                    Paused = false;
-
-                    if (!song.Song_Is_Playing)
-                    {
-
-                        SongModels.Select(songSelector => songSelector.Song_Is_Playing = false);
-
-                        song.Song_Is_Playing = true;
-
-                        mediaPlayer.Open(new Uri(song.URL));
-                        CallToChildThread(Progress_Slider, song.totale_Amount_Of_Seconds);
-
-
-                    }
-                    mediaPlayer.Play();
-
+                    CallToChildThread(Progress_Slider, song.totale_Amount_Of_Seconds);
                 }
-                else
-                {
-                    img.SetResourceReference(Image.SourceProperty, "Play_Button_Image");
-                    Paused = true;
 
-                    mediaPlayer.Pause();
-                }
             }
         }
         public async void CallToChildThread(Slider progress_Slider, int maxSeconds)
         {
 
-            if (mediaPlayer.NaturalDuration.HasTimeSpan)
+            if (Media_Player_Singleton.Instance.mediaPlayer.NaturalDuration.HasTimeSpan)
             {
-                progress_Slider.Maximum = mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+                progress_Slider.Maximum = Media_Player_Singleton.Instance.mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
                 progress_Slider.Value = 0;
 
                 while (progress_Slider.Value < progress_Slider.Maximum)
                 {
                     await Task.Delay(1);
-                    if (!Paused)
+                    if (!Media_Player_Singleton.Instance.Paused)
                     {
-                        TimeSpan FilePostion = mediaPlayer.Position;
+                        TimeSpan FilePostion = Media_Player_Singleton.Instance.mediaPlayer.Position;
 
                         progress_Slider.Value = FilePostion.TotalSeconds;
                         current_Amount_Of_Song.Content = MP3_functions.TimeToString(FilePostion.TotalSeconds);
                     }
 
                 }
+                Media_Player_Singleton.Instance.Select_Next_Song(datagrid_Songs);
 
-                Select_Next_Song();
+
             }
             else
             {
@@ -155,68 +106,35 @@ namespace MP3_EE_EA
 
         }
 
-        public void Select_Next_Song()
-        {
-
-            var The_Selected_Song = datagrid_Songs.SelectedItem;
-
-            var index_Of_Song = datagrid_Songs.Items.IndexOf(The_Selected_Song);
-
-
-            if ((datagrid_Songs.Items.Count-1)>= (index_Of_Song+1))
-            {
-                datagrid_Songs.SelectedItem = datagrid_Songs.Items[index_Of_Song + 1];
-
-
-            }
-            else if (datagrid_Songs.Items[0] != null)
-            {
-                datagrid_Songs.SelectedItem = datagrid_Songs.Items[0];
-            }
-
-        }
+       
 
         private void Progress_Slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
         {
             PP_Image_Name.SetResourceReference(Image.SourceProperty, "Play_Button_Image");
-            Paused = true;
+            Media_Player_Singleton.Instance.Paused = true;
 
-            mediaPlayer.Pause();
+            Media_Player_Singleton.Instance.mediaPlayer.Pause();
         }
 
         private void Progress_Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             PP_Image_Name.SetResourceReference(Image.SourceProperty, "Pause_Button_Image");
-            Paused = false;
+            Media_Player_Singleton.Instance.Paused = false;
 
             var value = Progress_Slider.Value;
 
-            mediaPlayer.Position = TimeSpan.FromSeconds(value);
+            Media_Player_Singleton.Instance.mediaPlayer.Position = TimeSpan.FromSeconds(value);
 
-            mediaPlayer.Play();
+            Media_Player_Singleton.Instance.mediaPlayer.Play();
         }
 
         private void Foward_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Select_Next_Song();
+            Media_Player_Singleton.Instance.Select_Next_Song(datagrid_Songs);
         }
         private void Backward_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            var The_Selected_Song = datagrid_Songs.SelectedItem;
-
-            var index_Of_Song = datagrid_Songs.Items.IndexOf(The_Selected_Song);
-
-
-            if (index_Of_Song - 1 <0)
-            {
-                datagrid_Songs.SelectedItem = datagrid_Songs.Items[0];
-
-
-            }
-            else
-            {
-                datagrid_Songs.SelectedItem = datagrid_Songs.Items[index_Of_Song - 1];
-            }
+            Media_Player_Singleton.Instance.Go_Backwards(datagrid_Songs);
         }
 
         private void Volume_Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -224,30 +142,7 @@ namespace MP3_EE_EA
 
             if (sender is Image Volume_Image)
             {
-                string? tags = Volume_Image.Tag as string;
-
-                double Old_Volume = 10;
-
-                if (tags is not null)
-                {
-                   var stringArray = tags.Split(";");
-
-                    _ = double.TryParse(stringArray.Last(), out Old_Volume);
-                }
-
-                if (tags is string tagString && tagString.Contains("Muted"))
-                {
-                    Volume_Image.Tag = "Not_Mute";
-                    volume_Slider.Value = Old_Volume;
-
-                    Volume_Slider_ValueChanged(volume_Slider,null);
-                }
-                else
-                {
-                    Volume_Image.Tag = "Muted;"+ volume_Slider.Value;
-                    volume_Slider.Value = 0;
-                    Volume_Slider_ValueChanged(volume_Slider, null);
-                }
+                Media_Player_Singleton.Instance.Volume_Mute_Or_Unmute(Volume_Image_Name, volume_Slider);
             }
         }
 
@@ -255,28 +150,7 @@ namespace MP3_EE_EA
         {
             if (sender is Slider volume_Slider)
             {
-                if (volume_Slider.Value == 0)
-                {
-                    Volume_Image_Name.SetResourceReference(Image.SourceProperty, "Volume_mute");
-                }
-                else if (volume_Slider.Value < 25)
-                {
-                    Volume_Image_Name.SetResourceReference(Image.SourceProperty, "Volume_0");
-                }
-                else if (volume_Slider.Value < 50)
-                {
-                    Volume_Image_Name.SetResourceReference(Image.SourceProperty, "Volume_25");
-                }
-                else if (volume_Slider.Value < 75)
-                {
-                    Volume_Image_Name.SetResourceReference(Image.SourceProperty, "Volume_50");
-                }
-                else
-                {
-                    Volume_Image_Name.SetResourceReference(Image.SourceProperty, "Volume_75");
-                }
-
-                mediaPlayer.Volume = volume_Slider.Value/100;
+                Media_Player_Singleton.Instance.Update_Volume(Volume_Image_Name, volume_Slider);
             }
         }
 
@@ -286,17 +160,7 @@ namespace MP3_EE_EA
             {
                 if (sender is Image image && image.DataContext is Song_Model song && System.IO.File.Exists(song.URL))
                 {
-                    System.IO.File.Delete(song.URL);
-                    SongModels = List_Helper.Fill_List_From_Folder();
-                    datagrid_Songs.ItemsSource = null;
-                    datagrid_Songs.ItemsSource = SongModels;
-                    datagrid_Songs.Items.Refresh();
-
-                    if (mediaPlayer.Source == new Uri(song.URL))
-                    {
-                        Select_Next_Song();
-                    }
-
+                    Media_Player_Singleton.Instance.Delete_Song(datagrid_Songs, song);
                 }
             }
             
@@ -304,36 +168,17 @@ namespace MP3_EE_EA
 
         private void Add_New_File_MouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
-            var folder = List_Helper.TryGetMp3Folder();
+            Media_Player_Singleton.Instance.Open_MP3_Folder(datagrid_Songs);
 
+        }
 
-
-            OpenFileDialog openFileDialog = new()
+        private void Shuffle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Image img)
             {
-                Filter = "mp3 files (*.mp3)|*.mp3",
-                FilterIndex = 2,
-                RestoreDirectory = true
-            };
-
-            if (folder != null)
-            {
-                openFileDialog.InitialDirectory = folder.FullName;
+                Media_Player_Singleton.Instance.Shuffle_The_MP3(img, datagrid_Songs);
 
             }
-            else
-            {
-                openFileDialog.InitialDirectory = "C:\\";
-            }
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-
-
-            }
-            SongModels = List_Helper.Fill_List_From_Folder();
-            datagrid_Songs.ItemsSource = null;
-            datagrid_Songs.ItemsSource = SongModels;
-            datagrid_Songs.Items.Refresh();
         }
     }
 }
