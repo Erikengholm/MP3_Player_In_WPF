@@ -53,7 +53,7 @@ namespace MP3_EE_EA
 
             Song_Model song_item = (Song_Model)datagrid_Songs.SelectedItem;
 
-            Media_Player_Singleton.Instance.Song_Selection_Is_Changed(song_item, End_Time_For_Song, current_Amount_Of_Song, Progress_Slider);
+            Media_Player_Singleton.Song_Selection_Is_Changed(song_item, End_Time_For_Song, current_Amount_Of_Song, Progress_Slider);
 
             Pause_MouseLeftButtonDown(PP_Image_Name, null);
 
@@ -64,7 +64,7 @@ namespace MP3_EE_EA
             if (sender is Image img && datagrid_Songs.SelectedItem is Song_Model song)
             {
 
-                Media_Player_Singleton.Instance.Pause_Or_Play(img,song);
+                Media_Player_Singleton.Pause_Or_Play(img,song);
                 
                 if (!Media_Player_Singleton.Instance.Paused)
                 {
@@ -160,7 +160,7 @@ namespace MP3_EE_EA
             {
                 if (sender is Image image && image.DataContext is Song_Model song && System.IO.File.Exists(song.URL))
                 {
-                    Media_Player_Singleton.Instance.Delete_Song(datagrid_Songs, song);
+                    Media_Player_Singleton.Delete_Song(datagrid_Songs, song);
                 }
             }
             
@@ -168,7 +168,7 @@ namespace MP3_EE_EA
 
         private void Add_New_File_MouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
-            Media_Player_Singleton.Instance.Open_MP3_Folder(datagrid_Songs);
+            Media_Player_Singleton.Open_MP3_Folder(datagrid_Songs);
 
         }
 
@@ -176,7 +176,7 @@ namespace MP3_EE_EA
         {
             if (sender is Image img)
             {
-                Media_Player_Singleton.Instance.Shuffle_The_MP3(img, datagrid_Songs);
+                Media_Player_Singleton.Shuffle_The_MP3(img, datagrid_Songs);
 
             }
         }

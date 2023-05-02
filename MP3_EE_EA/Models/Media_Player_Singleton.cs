@@ -15,7 +15,7 @@ namespace MP3_EE_EA.Models
     public sealed class Media_Player_Singleton
     {
         private static Media_Player_Singleton? instance = null;
-        private static readonly object padlock = new object();
+        private static readonly object padlock = new();
 
 
         public bool Paused = true;
@@ -42,18 +42,15 @@ namespace MP3_EE_EA.Models
             {
                 lock (padlock)
                 {
-                    if (instance == null)
-                    {
-                        instance = new Media_Player_Singleton();
-                    }
+                    instance ??= new Media_Player_Singleton();
                     return instance;
                 }
             }
         }
 
-        public void Song_Selection_Is_Changed(Song_Model Selected_Song, Label End, Label start, Slider slider)
+        public static void Song_Selection_Is_Changed(Song_Model Selected_Song, Label End, Label start, Slider slider)
         {
-            Instance.SongModels.Select(c => { c.Song_Is_Playing = false; return c; }).ToList();
+            _ = Instance.SongModels.Select(c => { c.Song_Is_Playing = false; return c; }).ToList();
 
 
             if (Selected_Song != null)
@@ -69,7 +66,7 @@ namespace MP3_EE_EA.Models
             }
         }
 
-        public void Pause_Or_Play(Image img, Song_Model song)
+        public static void Pause_Or_Play(Image img, Song_Model song)
         {
 
 
@@ -81,7 +78,7 @@ namespace MP3_EE_EA.Models
                 if (!song.Song_Is_Playing)
                 {
 
-                    Instance.SongModels.Select(songSelector => songSelector.Song_Is_Playing = false);
+                    _ = Instance.SongModels.Select(songSelector => songSelector.Song_Is_Playing = false);
 
                     song.Song_Is_Playing = true;
 
@@ -236,7 +233,7 @@ namespace MP3_EE_EA.Models
             }
         }
 
-        public void Delete_Song(DataGrid datagrid_Songs, Song_Model song)
+        public static void Delete_Song(DataGrid datagrid_Songs, Song_Model song)
         {
             System.IO.File.Delete(song.URL);
             Instance.SongModels = List_Helper.Fill_List_From_Folder();
@@ -252,7 +249,7 @@ namespace MP3_EE_EA.Models
 
         }
 
-        public void Open_MP3_Folder(DataGrid datagrid_Songs)
+        public static void Open_MP3_Folder(DataGrid datagrid_Songs)
         {
             var folder = List_Helper.TryGetMp3Folder();
 
@@ -286,7 +283,7 @@ namespace MP3_EE_EA.Models
             datagrid_Songs.Items.Refresh();
         }
 
-        public void Shuffle_The_MP3(Image img,DataGrid datagrid_Songs)
+        public static void Shuffle_The_MP3(Image img,DataGrid datagrid_Songs)
         {
 
             Instance.Shuffle = !Instance.Shuffle;

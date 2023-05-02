@@ -12,6 +12,7 @@ namespace MP3_EE_EA.Static_Classes
 {
     public class List_Helper
     {
+        private static readonly Random rng = new();
 
         public static List<Song_Model> Fill_List()
         {
@@ -19,14 +20,19 @@ namespace MP3_EE_EA.Static_Classes
 
             int counter = 0;
 
+
+            String[] Artist = { "Erik", "JT", "Leone", "Zelda","Sabaton","Caty" };
+            String[] Names = { "just relax nature escape", "the evening", "Spread the crash", "calming winter sonata", "sad Tomorrow" };
+
+
             while (counter < 100)
             {
-                var Test_Song = new Song_Model()
+                Song_Model Test_Song = new()
                 {
                     URL = "Test",
-                    Name = "Honey and Honey",
-                    Artist = " Pooh",
-                    Length = "2:32"
+                    Artist = Artist[rng.Next(Artist.Length - 1)],
+                    Length = MP3_functions.TimeToString(rng.NextDouble() * rng.Next(200)),
+                    Name = Names[rng.Next(Names.Length - 1)]
                 };
 
                 counter++;
@@ -58,7 +64,7 @@ namespace MP3_EE_EA.Static_Classes
                    
                     var nameSplit = item.Name.Split(';');
 
-                    Song_Model song = new Song_Model();
+                    Song_Model song = new();
 
                     if(artist.Any())
                     {
@@ -81,7 +87,7 @@ namespace MP3_EE_EA.Static_Classes
 
                         string t = nameSplit[1].Split('.')[0].Replace('_', ' '); ;
 
-                        tag.Performers.Prepend(t);
+                        _ = tag.Performers.Prepend(t);
                         tagFile.Save();
 
                         song.Name = nameSplit[0];

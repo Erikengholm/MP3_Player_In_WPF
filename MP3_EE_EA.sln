@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP3_EE_EA", "MP3_EE_EA\MP3_EE_EA.csproj", "{268B4AD5-42CC-49F7-AE9B-6FCC28FC21B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MP3_Unit_Testing", "MP3_EE_EATests\MP3_Unit_Testing.csproj", "{0FE5EC18-7B62-4F00-BABF-9A93DE7E40FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP3_Unit_Testing", "MP3_EE_EATests\MP3_Unit_Testing.csproj", "{0FE5EC18-7B62-4F00-BABF-9A93DE7E40FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

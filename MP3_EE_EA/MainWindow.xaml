@@ -116,7 +116,7 @@
     </Window.Resources>
 
 
-    <Grid Background="LightGray">
+    <Grid Background="CadetBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -127,12 +127,12 @@
             <RowDefinition Height="4*"/>
 
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" Name="stackPanel1" Width="Auto" LastChildFill="False">
+        <DockPanel Grid.Row="0" Name="stackPanel1" Background="White" Width="Auto" LastChildFill="False">
             <Grid DockPanel.Dock="Top">
                 <DataGrid
                 x:Name="datagrid_Songs"
           ItemsSource="{Binding Path=SongModels}" 
-          IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged" VerticalScrollBarVisibility="Visible" AutoGenerateColumns="False" GridLinesVisibility="Vertical" UseLayoutRounding="True">
+          IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged" Background="White" VerticalScrollBarVisibility="Visible" AutoGenerateColumns="False" GridLinesVisibility="Vertical" UseLayoutRounding="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}" Width="4*">
                             <DataGridTextColumn.Header>
@@ -161,7 +161,7 @@
                 </DataGrid>
             </Grid>
         </DockPanel>
-        <Button Grid.Row="1" Click="Add_New_File_MouseLeftButtonUp">
+        <Button Grid.Row="1" Background="CadetBlue" Click="Add_New_File_MouseLeftButtonUp">
             Open MP3 Folder
         </Button>
 
