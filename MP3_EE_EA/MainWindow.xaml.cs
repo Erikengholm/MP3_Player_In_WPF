@@ -1,35 +1,22 @@
-﻿using Microsoft.Win32;
-using MP3_EE_EA.Models;
+﻿using MP3_EE_EA.Models;
 using MP3_EE_EA.Static_Classes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using TagLib;
-using TagLib.Ape;
 
 namespace MP3_EE_EA
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
 
-        
         public MainWindow()
         {
             InitializeComponent();
@@ -37,14 +24,6 @@ namespace MP3_EE_EA
             this.DataContext = this;
 
             datagrid_Songs.ItemsSource = Media_Player_Singleton.Instance.SongModels;
-        }
-
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string? name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -68,13 +47,14 @@ namespace MP3_EE_EA
                 
                 if (!Media_Player_Singleton.Instance.Paused)
                 {
-                    CallToChildThread(Progress_Slider, song.totale_Amount_Of_Seconds);
+                    CallToChildThread(Progress_Slider);
                 }
 
             }
         }
-        public async void CallToChildThread(Slider progress_Slider, int maxSeconds)
+        public async void CallToChildThread(Slider progress_Slider)
         {
+            await Task.Delay(2000);
 
             if (Media_Player_Singleton.Instance.mediaPlayer.NaturalDuration.HasTimeSpan)
             {
@@ -94,19 +74,8 @@ namespace MP3_EE_EA
 
                 }
                 Media_Player_Singleton.Instance.Select_Next_Song(datagrid_Songs);
-
-
             }
-            else
-            {
-                await Task.Delay(200);
-                CallToChildThread(Progress_Slider, maxSeconds);
-            }
-
-
         }
-
-       
 
         private void Progress_Slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
         {
@@ -163,13 +132,11 @@ namespace MP3_EE_EA
                     Media_Player_Singleton.Delete_Song(datagrid_Songs, song);
                 }
             }
-            
         }
 
         private void Add_New_File_MouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
             Media_Player_Singleton.Open_MP3_Folder(datagrid_Songs);
-
         }
 
         private void Shuffle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

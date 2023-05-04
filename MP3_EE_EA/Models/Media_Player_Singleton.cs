@@ -12,24 +12,43 @@ using System.Windows.Media;
 
 namespace MP3_EE_EA.Models
 {
+    /// <summary>
+    /// A Singleton class to ensure that all instance of mediaPlayer is the same across the board
+    /// </summary>
     public sealed class Media_Player_Singleton
     {
-        private static Media_Player_Singleton? instance = null;
+        private static Media_Player_Singleton? instance { get; set; } = null;
         private static readonly object padlock = new();
 
+        /// <summary>
+        /// Tells the Application if the Song is paused or not
+        /// </summary>
+        public bool Paused { get; set; } = true;
 
-        public bool Paused = true;
-
+        /// <summary>
+        /// The MediaPlayer which plays and manipulate the Mp3 Files
+        /// </summary>
         public readonly MediaPlayer mediaPlayer = new();
 
+        /// <summary>
+        /// Tells the application if the song is in shuffle mode
+        /// </summary>
+        public bool Shuffle { get; set; } = false;
 
-        public bool Shuffle = false;
-
+        /// <summary>
+        /// Tells the application where to start in the shuffle list 
+        /// </summary>
+        /// this is here to ensure that the song being played is always the one the shuffle order start with
         public int Shuffle_Index { get; set; } = 0;
 
+        /// <summary>
+        /// The order the shuffle song should come in
+        /// </summary>
         public List<int> Shuffle_Song_Order { get; set; } = new List<int>();
 
-
+        /// <summary>
+        /// List of all Songs in Song_Model format
+        /// </summary>
         public List<Song_Model> SongModels { get; set; } = List_Helper.Fill_List_From_Folder();
 
         Media_Player_Singleton()
@@ -294,6 +313,11 @@ namespace MP3_EE_EA.Models
                     Instance.Shuffle_Song_Order.Shuffle();
 
                     Instance.Shuffle_Index = datagrid_Songs.Items.IndexOf(datagrid_Songs.SelectedItem);
+
+                    if(Instance.Shuffle_Index == -1)
+                    {
+                    Instance.Shuffle_Index = Instance.Shuffle_Song_Order[0];
+                    }
 
                     img.SetResourceReference(Image.SourceProperty, "Shuffle_On");
                 }

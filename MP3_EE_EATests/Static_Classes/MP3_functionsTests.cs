@@ -35,7 +35,6 @@ namespace MP3_EE_EA.Static_Classes.Tests
 
             Assert.IsNotNull(folder);
 
-
             string name = folder.Name;
 
             Assert.AreEqual("Mp3_Files", name);

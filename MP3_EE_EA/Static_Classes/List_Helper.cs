@@ -10,6 +10,9 @@ using TagLib;
 
 namespace MP3_EE_EA.Static_Classes
 {
+    /// <summary>
+    /// A Static class that Fills and get a list of songs
+    /// </summary>
     public class List_Helper
     {
         private static readonly Random rng = new();
@@ -102,9 +105,6 @@ namespace MP3_EE_EA.Static_Classes
 
                     int second_Amount = (int)tagFile.Properties.Duration.TotalSeconds;
 
-                    int second_Amount_2 = (int)tagFile.Properties.Duration.TotalMilliseconds;
-
-
 
                     TimeSpan time = TimeSpan.FromSeconds(second_Amount);
 
@@ -118,8 +118,6 @@ namespace MP3_EE_EA.Static_Classes
                     {
                         song.Length = time.ToString(@"hh\:mm\:ss");
                     }
-                    song.totale_Amount_Of_Seconds = second_Amount;
-                    song.totale_Amount_Of_Seconds_2 = second_Amount_2;
 
                     temp.Add(song);
                 }

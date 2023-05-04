@@ -8,6 +8,9 @@ using System.Windows.Controls;
 
 namespace MP3_EE_EA.Static_Classes
 {
+    /// <summary>
+    /// A Static class that hold free floating functions for Mp3 Player
+    /// </summary>
     public static class MP3_functions
     {
         public static string TimeToString(double seconds)
